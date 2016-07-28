@@ -12,6 +12,23 @@ set :session_secret, "super secret"
     redirect '/links'
   end
 
+  get '/users/new' do
+    erb :'user/new'
+  end
+
+    post '/users' do
+      user = User.create(email: params[:email], password: params[:password])
+      session[:user_id]= user.id
+      redirect '/links'
+    end
+
+    helpers do
+      def current_user
+        @current_user ||= User.get(session[:user_id])
+      end
+    end
+
+
   get '/links' do
     @links = Link.all
     erb :'links/index'
@@ -35,21 +52,6 @@ set :session_secret, "super secret"
     tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
     erb :'links/index'
-  end
-
-  post '/users' do
-    User.create(email: params[:email], password: params[:password])
-    session[:user_id]= user.id
-    redirect '/links'
-  end
-  get '/users/new' do
-    erb :'user/new'
-  end
-
-  helpers do
-    def current_user
-      @current_user ||= User.get(session[:user_id])
-    end
   end
 
   run! if app_file == $0

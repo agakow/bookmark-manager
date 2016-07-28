@@ -16,6 +16,12 @@ class User
   validates_presence_of :email
   validates_format_of :email, as: :email_address
 
+  def error_messages
+    ["Please enter an email address",
+      "Please enter a valid email address",
+      "Your passwords don't match"]
+  end
+
   def password=(password)
     @password = password
     self.password_digest = BCrypt::Password.create(password)

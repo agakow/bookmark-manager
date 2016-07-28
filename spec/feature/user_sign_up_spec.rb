@@ -34,7 +34,7 @@ require 'spec_helper'
       fill_in "password", :with => "monkey"
       fill_in "password_confirmation", :with => "monkey"
       click_button "Sign me up!"
-      expect(User.count).to eq 0
+      expect(page).to have_content "Please enter an email address"
     end
 
     scenario "user can't sign up without entering a valid email" do
@@ -45,7 +45,7 @@ require 'spec_helper'
       fill_in "email", :with => "invalidemail"
       fill_in "password_confirmation", :with => "monkey"
       click_button "Sign me up!"
-      expect(User.count).to eq 0
+      expect(page).to have_content "Please enter a valid email address"
     end
 
   end

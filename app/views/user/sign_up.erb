@@ -8,7 +8,7 @@ Sign up here:
   </label>
   <label for = "email">
     Enter email:
-  <input type = "text" name = "email" value="<%= @user.email %>"/>
+  <input type = "text" name = "email" value="<%= @user.email %>" required/>
   </label>
   <label for = "password">
     Enter password:
@@ -21,6 +21,6 @@ Sign up here:
   <input type="submit" value="Sign me up!"/>
 </form>
 
-<% if flash[:bad] %>
-  <div id='notice'><%= flash[:bad] %></div>
+<% if flash[:incorrect_password] %>
+  <div id='notice'><%= flash[:incorrect_password] %></div>
 <% end %>

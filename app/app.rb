@@ -53,7 +53,7 @@ post '/user' do
     session[:user_id] = @user.id
     redirect '/'
   else
-    flash.now[:bad] = "Your passwords don\'t match"
+    flash.now[:incorrect_password] = "Your passwords don't match"
     erb :'/user/sign_up'
   end
 end

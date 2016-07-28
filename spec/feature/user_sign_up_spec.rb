@@ -24,7 +24,28 @@ require 'spec_helper'
       fill_in "password", :with => "monkey"
       fill_in "password_confirmation", :with => "wrong password"
       click_button "Sign me up!"
-      expect(page).to have_content "Your passwords don\'t match"
+      expect(page).to have_content "Your passwords don't match"
+    end
+
+    scenario "user can't sign up without entering an email" do
+      visit '/'
+      click_button('Sign up')
+      fill_in "name", :with => "aga"
+      fill_in "password", :with => "monkey"
+      fill_in "password_confirmation", :with => "monkey"
+      click_button "Sign me up!"
+      expect(User.count).to eq 0
+    end
+
+    scenario "user can't sign up without entering a valid email" do
+      visit '/'
+      click_button('Sign up')
+      fill_in "name", :with => "aga"
+      fill_in "password", :with => "monkey"
+      fill_in "email", :with => "invalidemail"
+      fill_in "password_confirmation", :with => "monkey"
+      click_button "Sign me up!"
+      expect(User.count).to eq 0
     end
 
   end

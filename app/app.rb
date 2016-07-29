@@ -5,7 +5,7 @@ require_relative 'data_mapper_setup'
 require 'sinatra/flash'
 
 class BookmarkManager < Sinatra::Base
-
+use Rack::MethodOverride
 enable :sessions
 set :session_secret, "super secret"
 register Sinatra::Flash
@@ -19,40 +19,45 @@ register Sinatra::Flash
     erb :'user/new'
   end
 
-  get '/users/sign_in' do
-    erb :'user/sign_in'
+  get '/sessions/new' do
+    erb :'sessions/new'
   end
 
-  post '/users/find' do
-    user = User.first(email: params[:email])
+  post '/sessions' do
+    user = User.authenticate(params[:email], params[:password])
     if user
       session[:user_id] = user.id
       redirect '/links'
     else
-      flash.now[:errors] = 'Incorrect email or password'
-      erb :'user/sign_in'
+      flash.now[:errors] = ['Incorrect email or password']
+      erb :'sessions/new'
     end
   end
 
-    post '/users' do
-      @user = User.create(email: params[:email],
-                         password: params[:password],
-                         password_confirmation: params[:password_confirmation])
-      if @user.save
-        session[:user_id]= @user.id
-        redirect '/links'
-      else
-        flash.now[:errors] = @user.errors.full_messages
-        erb :'user/new'
-      end
+  post '/users' do
+    @user = User.create(email: params[:email],
+                        password: params[:password],
+                        password_confirmation: params[:password_confirmation])
+    if @user.save
+      session[:user_id] = @user.id
+      redirect '/links'
+    else
+      flash.now[:errors] = @user.errors.full_messages
+      erb :'user/new'
     end
+  end
 
-    helpers do
-      def current_user
-        @current_user ||= User.get(session[:user_id])
-      end
+  helpers do
+    def current_user
+      @current_user ||= User.get(session[:user_id])
     end
+  end
 
+  delete '/sessions' do
+    session[:user_id] = nil
+    flash.keep[:notice] = 'goodbye!'
+    redirect to '/links'
+  end
 
   get '/links' do
     @links = Link.all

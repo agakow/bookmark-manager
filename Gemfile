@@ -1,15 +1,16 @@
 source 'https://rubygems.org'
-gem 'rake'
-# gem 'activerecord'
-# gem 'pg'
-gem 'sinatra'
+
 gem 'data_mapper'
 gem 'dm-postgres-adapter'
-gem 'database_cleaner'
-gem 'rspec'
-gem 'rspec-sinatra'
-gem 'capybara'
+gem 'sinatra'
+gem 'sinatra-partial'
+gem 'rake'
 gem 'bcrypt'
 gem 'sinatra-flash'
-# gem 'rspec'
-# gem 'faker'
+
+group :test do
+  gem 'byebug'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'rspec'
+end

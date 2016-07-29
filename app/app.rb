@@ -19,6 +19,21 @@ register Sinatra::Flash
     erb :'user/new'
   end
 
+  get '/users/sign_in' do
+    erb :'user/sign_in'
+  end
+
+  post '/users/find' do
+    user = User.first(email: params[:email])
+    if user
+      session[:user_id] = user.id
+      redirect '/links'
+    else
+      flash.now[:errors] = 'Incorrect email or password'
+      erb :'user/sign_in'
+    end
+  end
+
     post '/users' do
       @user = User.create(email: params[:email],
                          password: params[:password],
